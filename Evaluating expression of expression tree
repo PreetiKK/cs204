@@ -2,7 +2,7 @@
 using namespace std; 
 // To change a expression from infix to postfix
 //Function to return precedence of operators 
-int precedence(char cr) 
+int prec(char cr) 
 { 
     if(cr == '^') 
     return 3; 
@@ -51,7 +51,7 @@ void infix_To_Postfix(string s)
         else{ 
             while(st.top() != 'P' && prec(s[i]) <= prec(st.top())) 
             { 
-                char c = st.top(); 
+                char cr = st.top(); 
                 st.pop(); 
                 ns += cr; 
             } 
@@ -216,12 +216,13 @@ int eval(node* root)
 
 int main()
 { 
+  node* root;
   string s;
   cin >> s;
   infix_To_Postfix(s);
   
   
-    string s
+    string ns;
   
     int n = ns.length(); 
   
@@ -235,10 +236,9 @@ int main()
     for (int i = 0; i < n; i++) 
         cout << postfix[i]; 
   
-   char postfix[] ;
-    et* r = constructTree(postfix);  
+    et* r = construct_Tree(postfix);  
     inorder(r); 
     
     cout << eval(root);
     return 0; 
-  
+ } 
