@@ -1,244 +1,203 @@
-#include<bits/stdc++.h> 
-using namespace std; 
-// To change a expression from infix to postfix
-//Function to return precedence of operators 
-int prec(char cr) 
-{ 
-    if(cr == '^') 
-    return 3; 
-    else if(cr == '*' || cr == '/') 
-    return 2; 
-    else if(cr == '+' || cr == '-') 
-    return 1; 
+#include<bits/stdc++.h>
+using namespace std;
+
+int isoperator(string c)
+{
+    if (c == "^" || c == "/" || c == "*" || c == "+" || c == "-"||c=="(")
+        return 1;
+    return 0;
+}
+int inpre(string c)
+{
+    if (c == "^")
+        return 5;
+    if (c == "*" || c == "/")
+        return 4;
+    if (c == "+" || c == "-")
+        return 2;
+    else 
+        return 1;
+}
+
+int outpre(string c)
+{
+    if (c == "^")
+        return 6;
+    if (c == "*" || c == "/")
+        return 3;
+    if (c == "+" || c == "-")
+        return 1;
     else
-    return -1; 
-} 
+        return -1;
+    
+}
+vector<string> stov(string s)
+{
+    int n = s.size();
+    vector<string> v;
+    for (int i = 0; i < n; i++)
+    {
+        string temp = "";
+        if ((s[i] >= '0' && s[i] <= '9'))
+        {
+            int j = i;
+            while (i != s.size() && s[i] >= '0' && s[i] <= '9')
+            {
+                temp += s[i];
+                i++;
+            }
+            i--;
+        }
+        else
+        {
+            temp += s[i];
+        }
+        if (temp=="-")
+        {
+            if (v.empty())
+                v.push_back("0");
+            else
+            {
+                if (isoperator(v.back()))
+                    v.push_back("0");
+            }
+        }
+        v.push_back(temp);
+    }
+    return v;
+}
+vector<string> post(vector<string> s)
+{
+    stack<string> st;
+    st.push("E");
+    int l = s.size();
+    vector<string> nv;
+    for (int i = 0; i < l; i++)
+    {
+        if ((s[i][0] >= '0' && s[i][0] <= '9'))
+            nv.push_back(s[i]);
+        else if (s[i] == "(")
+            st.push("(");
+        else if (s[i] == ")")
+        {
+            while (st.top() != "E" && st.top() != "(")
+            {
+                string c = st.top();
+                st.pop();
+                nv.push_back(c);
+            }
+            if (st.top() == "(")
+            {
+                string c = st.top();
+                st.pop();
+            }
+        }
+        else
+        {
+            while (st.top() != "E" && outpre(s[i]) < inpre(st.top()))
+            {
+                string c = st.top();
+                st.pop();
+                nv.push_back(c);
+            }
+            st.push(s[i]);
+        }
+    }
+    while (st.top() != "E")
+    {
+        string c = st.top();
+        st.pop();
+        nv.push_back(c);
+    }
 
-void infix_To_Postfix(string s) 
-{ 
-    std::stack<char> st; 
-    st.push('P'); 
-    int l = s.length(); 
-    string ns; 
-    for(int i = 0; i < l; i++) 
-    { 
-        // If the scanned character is an operand, adding it to output string 
-        if((s[i] >= 'a' && s[i] <= 'z')||(s[i] >= 'A' && s[i] <= 'Z')) 
-        ns+=s[i]; 
-  
-        // If the scanned character is an ‘(‘, push it in the stack. 
-        else if(s[i] == '(') 
-          
-        st.push('('); 
-          
-        // If scanned character is an ‘)’, pop and output it to the string from the stack until an ‘(‘ is encountered. 
-        else if(s[i] == ')') 
-        { 
-            while(st.top() != 'P' && st.top() != '(') 
-            { 
-                char cr = st.top(); 
-                st.pop(); 
-               ns += cr; 
-            } 
-            if(st.top() == '(') 
-            { 
-                char cr = st.top(); 
-                st.pop(); 
-            } 
-        } 
-          
-        //If an operator is scanned 
-        else{ 
-            while(st.top() != 'P' && prec(s[i]) <= prec(st.top())) 
-            { 
-                char cr = st.top(); 
-                st.pop(); 
-                ns += cr; 
-            } 
-            st.push(s[i]); 
-        } 
-  
-    } 
-    //Poping all the remaining elements from the stack 
-    while(st.top() != 'P') 
-    { 
-        char cr = st.top(); 
-        st.pop(); 
-        ns += cr; 
-    } 
-      
-    cout << ns << endl; 
-  
-} 
+    return nv;
+}
+struct node
+{
+    string s;
+    node *lch = NULL, *rch = NULL;
+};
+node *ctree(vector<string> str)
+{
 
-// expression tree node 
-struct et { 
-    char value; 
-    et* left, *right; }; 
-  
-// function to check if 'cr'  is an operator 
-bool is_Operator(char cr) 
-{ 
-    if (cr == '+' || cr == '-' || 
-            cr == '*' || cr == '/' || 
-            cr == '^') 
-        return true; 
-        return false; 
-} 
-  
-// function to do inorder traversal 
-void inorder(et *t) 
-{ 
-    if(t) 
-    { 
-        inorder(t->left); 
-        cout << t->value;
-        inorder(t->right); 
-    } 
-} 
-  
-// function to create a new node 
-et* newNode(int v) 
-{ 
-    et *temp = new et; 
-    temp->left = temp->right = NULL; 
-    temp->value = v; 
-    return temp; 
-}; 
-  
-// Returns root of constructed tree for given postfix expression 
-et* construct_Tree(char postfix[]) 
-{ 
-    stack<et *> st; 
-    et *t, *t1, *t2; 
-  
-    // Traversing through every character of the given input expression 
-    for (int i=0; i<strlen(postfix); i++) 
-    { 
-        // If it is a operand, push into stack 
-        if (!is_Operator(postfix[i])) 
-        { 
-            t = newNode(postfix[i]); 
-            st.push(t); 
-        } 
-        //operator 
-        else 
-        { 
-            t = newNode(postfix[i]); 
-  
-            // Pop two top nodes 
-            t1 = st.top(); // Store top 
-            st.pop();      // Remove top 
-            t2 = st.top(); 
-            st.pop(); 
-  
-            //  making them children 
-            t->right = t1; 
-            t->left = t2; 
-  
-            // Adding this subexpression to stack 
-            st.push(t); 
-        } 
-    } 
-  
-    //  only element will be root of expression tree 
-    t = st.top(); 
-    st.pop(); 
-  
-    return t; 
-} 
-
-// Class to represent the nodes of syntax tree  
-class node  
-{  
-public:  
-    string info;  
-    node *left = NULL, *right = NULL;  
-    node(string x)  
-    {  
-        info = x;  
-    }  
-};  
-  
-// function to return the integer value of a given string 
-int to_Int(string s)  
-{  
-    int num = 0;  
-      
-    // Check if the integral value is negative or not 
-    // If it is not negative, generate the number normally 
-    if(s[0]!='-') 
-        for (int i=0; i<s.length(); i++)  
-            num = num*10 + (int(s[i])-48);  
-    // If it is negative, calculate the +ve number first ignoring the sign and invert the  sign at the end 
+    node *root = NULL;
+    vector<node *> stv;
+    int i = 0;
+    while (i != str.size())
+    {
+        if (str[i] != "+" && str[i] != "-" && str[i] != "*" && str[i] != "/" && str[i] != "^")
+        {
+            node *temp = (node *)malloc(sizeof(node));
+            temp->s = str[i];
+            for(int j=0;j<str[i].size();j++)
+            {
+                if (str[i][j] < '0' || str[i][j] > '9')
+                    return NULL;
+            }
+            stv.push_back(temp);
+        }
+        else
+        {
+            if (stv.size()< 2)
+                return NULL;
+            node *s1 = stv.back();
+            stv.pop_back();
+            node *s2 = stv.back();
+            stv.pop_back();
+            node *temp = (node *)malloc(sizeof(node));
+            temp->s = str[i];
+            temp->lch = s2;
+            temp->rch = s1;
+            stv.push_back(temp);
+        }
+        i++;
+    }
+    if (stv.size()!= 1)
+        return NULL;
+    return stv.back();
+}
+int value(node *root)
+{
+    string s = root->s;
+    int ans = 0;
+    if (s != "+" && s != "-" && s != "*" && s != "/" && s != "^")
+        return stoi(s);
     else
-        for (int i=1; i<s.length(); i++)  
-        { 
-            num = num*10 + (int(s[i])-48);  
-            num = num*-1; 
-        } 
-      
-    return num;  
-}  
-  
-// This function receives a node of the syntax tree and recursively evaluates it  
-int eval(node* root)  
-{  
-    // empty tree  
-    if (!root)  
-        return 0;  
-  
-    // leaf node i.e, an integer  
-    if (!root->left && !root->right)  
-        return to_Int(root->info);  
-  
-    // Evaluate left subtree  
-    int l_val = eval(root->left);  
-  
-    // Evaluate right subtree  
-    int r_val = eval(root->right);  
-  
-    // Check which operator to apply  
-    if (root->info=="+")  
-        return l_val+r_val;  
-  
-    if (root->info=="-")  
-        return l_val-r_val;  
-  
-    if (root->info=="*")  
-        return l_val*r_val; 
-         
-    if (root->info=="/")  
-        return l_val/r_val; 
-    
-    return l_val^r_val;  
-}  
-
-int main()
-{ 
-  node* root;
-  string s;
-  cin >> s;
-  infix_To_Postfix(s);
-  
-  
-    string ns;
-  
-    int n = ns.length(); 
-  
-    // declaring character array 
-    char  postfix[n + 1]; 
-  
-    // copying the contents of the 
-    // string to char array 
-    strcpy(postfix, ns.c_str()); 
-  
-    for (int i = 0; i < n; i++) 
-        cout << postfix[i]; 
-  
-    et* r = construct_Tree(postfix);  
-    inorder(r); 
-    
-    cout << eval(root);
-    return 0; 
- } 
+    {
+        int lans = value(root->lch), rans = value(root->rch);
+        if (s == "+")
+            ans = lans + rans;
+        else if (s == "-")
+            ans = lans - rans;
+        else if (s == "*")
+            ans = lans * rans;
+        else if (s == "/")
+            ans = lans / rans;
+        else
+        {
+            ans = 1;
+            for(int i=0;i<rans;i++) ans *= lans;
+        }
+    }
+    return ans;
+}
+int main(){
+    int t, n;
+    cin >> t;
+    while (t--){
+        cin >> n;
+        while (n--)
+        {
+            string s;
+            cin >> s;
+            vector<string> str = stov(s);
+            str = post(str);
+            node *root = ctree(str);
+            if (root == NULL)
+                cout << "CAN'T BE EVALUATED" << endl;
+            else
+                cout << value(root) << endl;
+        }
+    }
+    return 0;
+}
