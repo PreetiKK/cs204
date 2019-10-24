@@ -5,7 +5,7 @@ typedef long long lli;
 typedef long li;
 #define pf(i,n) for(long i=0;i<n;i++)
 
-int COUNT; 
+int number; 
 
 bool IS_VALID(int cx, int cy, int key,vector<vector<int>> &input,vector<vector<int>> &visited,int n,int m) 
 { 
@@ -24,7 +24,7 @@ void BFT(int cx, int cy, int i, int j,vector<vector<int>> &input,vector<vector<i
     // considering the case when BFT terminates 
     visited[i][j] = 1; 
     g_visited[i][j] = 1;
-    COUNT++;
+    number++;
     if (cx != cy) 
         return; 
   
@@ -62,27 +62,27 @@ void finding_Largest_Connected_Grid(vector<vector<int>> &input,vector<vector<int
     for (int i = 0; i < n; i++) { 
         for (int j = 0; j < m; j++) { 
             if(g_visited[i][j]==0){
-                COUNT = 0; 
+                number = 0; 
   
                 // check blocks in right 
                 if (j < m) 
                     BFT(input[i][j], input[i][j + 1], i, j, input,visited,g_visited,n,m); 
     
                 // result update
-                if (COUNT > current_maximum) { 
-                    current_maximum = COUNT; 
+                if (number > current_maximum) { 
+                    current_maximum = number; 
                     resetting_result(input[i][j], input,visited,result,n,m); 
                 } 
                 reset_already_visited(visited,n,m); 
-                COUNT = 0; 
+                number = 0; 
     
                 // check blocks below 
                 if (i + 1 < n) 
                     BFT(input[i][j], input[i + 1][j], i, j, input,visited,g_visited,n,m); 
     
                 // again result being updated 
-                if (COUNT > current_maximum) { 
-                    current_maximum = COUNT; 
+                if (number > current_maximum) { 
+                    current_maximum = number; 
                     resetting_result(input[i][j], input,visited,result,n,m); 
                 } 
             }
