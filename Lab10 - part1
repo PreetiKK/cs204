@@ -7,7 +7,7 @@ typedef long li;
 
 int number; 
 
-bool is_valid(int cx, int cy, int key,vector<vector<int>> &input,vector<vector<int>> &visited,int n,int m) 
+bool IS_VALID(int cx, int cy, int key,vector<vector<int>> &input,vector<vector<int>> &visited,int n,int m) 
 { 
     if (cx < n && cy < m && cx >= 0 && cy >= 0) { 
         if (visited[cx][cy] == false && input[cx][cy] == key) 
@@ -32,7 +32,7 @@ void BFT(int cx, int cy, int i, int j,vector<vector<int>> &input,vector<vector<i
     int y_move[] = { 1, -1, 0, 0 }; 
   
     for (int u = 0; u < 4; u++) 
-        if (is_valid(i + y_move[u], j + x_move[u], cx, input, visited,n,m)) 
+        if (IS_VALID(i + y_move[u], j + x_move[u], cx, input, visited,n,m)) 
             BFT(cx, cy, i + y_move[u], j + x_move[u], input,visited,g_visited,n,m); 
 } 
   
