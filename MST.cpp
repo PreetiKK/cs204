@@ -30,15 +30,15 @@ int dsu(int a, int b,int ds[],int rank[])
     if(rank[repa]==rank[repb])
     {
         rank[repb]++;
-        ds[repa]=repb; //link
+        ds[repa]=repb; 
     }
     if(rank[repa]>rank[repb])
     {
-        ds[repb]=repa; //link
+        ds[repb]=repa; 
     }
     else 
     {
-        ds[repa]=repb; //link
+        ds[repa]=repb; 
     }
     return 1;
 }
@@ -56,14 +56,14 @@ int main(){
         v.pb({c,{a,b}});
 
     }
-    sort(v.begin(),v.end()); //to take min edge first
+    sort(v.begin(),v.end()); //first we have to take min edge 
 
 
     int ds[n];
     int rank[n];
     forr(i,0,n-1)
     {
-        ds[i]=i;//makesets each their own rep
+        ds[i]=i;//rep makesets
         rank[i]=0;
     }
 
@@ -73,7 +73,7 @@ int main(){
     {
         int a=v[i].second.first;
         int b=v[i].second.second;
-        if(findset(a,ds,rank)!=findset(b,ds,rank)) //if findset of both is same not in mst
+        if(findset(a,ds,rank)!=findset(b,ds,rank)) //not in mst if findset is not same 
         {
             dsu(a,b,ds,rank);
             sum+=v[i].first;
