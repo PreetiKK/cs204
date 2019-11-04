@@ -2,7 +2,21 @@
 
 using namespace std;
 
-void bfs(int y, vector<vector<int>> e)
+
+
+void DFS(int x, vector<int> v, vector<vector<int>> e)
+{
+    v[x]=0;
+    cout<<x+1<<' ';
+    for(int i=0;i<e[x].size();i++)
+    {
+        if(v[e[x][i]])
+        {
+            DFS(e[x][i],v,e);
+        }
+    }
+}
+void BFS(int y, vector<vector<int>> e)
 {
     vector<int> v(e.size(),1);
     queue<int> Q;
@@ -25,19 +39,6 @@ void bfs(int y, vector<vector<int>> e)
                 }
             }
             cout<<x+1<<' ';
-        }
-    }
-}
-
-void dfs(int x, vector<int> v, vector<vector<int>> e)
-{
-    v[x]=0;
-    cout<<x+1<<' ';
-    for(int i=0;i<e[x].size();i++)
-    {
-        if(v[e[x][i]])
-        {
-            dfs(e[x][i],v,e);
         }
     }
 }
