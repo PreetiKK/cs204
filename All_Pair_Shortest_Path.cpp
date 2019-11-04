@@ -19,7 +19,7 @@ int main(){
 	cin>>n>>m;
 	vector<pair<int,pii>> v;
 
-	//vi arr[n];
+	//  vector  array [n];
 	ll d[n][n];
 	forr(j,0,n-1)
 	{
@@ -35,9 +35,22 @@ int main(){
 		ll a,b,c;
 		cin>>a>>b>>c;
 		v.pb({c,{a,b}});
-		//arr[b].pb(a);
+		//array[b].push.back(a);
 		d[a][b]=c;
 
+	}
+	
+	
+	forr(j,0,n-1)
+	{
+		forr(i,0,n-1)
+		{
+			if(d[j][i]==INT_MAX)
+				cout<<"inf"<<" ";
+			else
+				cout<<d[j][i]<<" ";
+		}
+		cout<<"\n";
 	}
 
 	forr(k,0,n-1){
@@ -50,16 +63,5 @@ int main(){
 		}
 	}
 
-	forr(j,0,n-1)
-	{
-		forr(i,0,n-1)
-		{
-			if(d[j][i]==INT_MAX)
-				cout<<"inf"<<" ";
-			else
-				cout<<d[j][i]<<" ";
-		}
-		cout<<"\n";
-	}
 
 }
