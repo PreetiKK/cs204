@@ -11,9 +11,7 @@ typedef vector<pair<int,int>> vpii;
 
 ll frev(ll x,ll y)
 {
-	return x>y;
-}
-
+	return x>y;}
 int main(){
 	int n,m;
 	cin>>n>>m;
@@ -22,8 +20,7 @@ int main(){
 	//  vector  array [n];
 	ll d[n][n];
 	forr(j,0,n-1)
-	{
-		forr(i,0,n-1)
+	{forr(i,0,n-1)
 		{
 			if(j==i) d[j][i]=0;
 			else
